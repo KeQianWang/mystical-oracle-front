@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "author": "WANGKEQIAN <keqian.wang@biomind.ai>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev"
+  },
+  "homepage": "./",
+  "dependencies": {
+    "@ant-design/icons": "^6.0.0",
+    "antd": "^5.23.0",
+    "umi": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "prettier": "^3.4.2",
+    "typescript": "^5.0.3"
+  }
+}
