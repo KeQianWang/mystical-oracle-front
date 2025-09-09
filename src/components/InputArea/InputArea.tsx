@@ -5,9 +5,10 @@ import styles from './InputArea.less';
 interface InputAreaProps {
   onSendMessage: (message: string, attachments?: File[], url?: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export default function InputArea({ onSendMessage, disabled = false }: InputAreaProps) {
+export default function InputArea({ onSendMessage, disabled = false, placeholder = "輸入消息..." }: InputAreaProps) {
   const [message, setMessage] = useState('');
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [url, setUrl] = useState('');
@@ -90,7 +91,7 @@ export default function InputArea({ onSendMessage, disabled = false }: InputArea
         <div className={styles.urlInput}>
           <input
             type="url"
-            placeholder="输入网页URL..."
+            placeholder="輸入網頁URL以添加到知識庫..."
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className={styles.urlField}
@@ -109,7 +110,7 @@ export default function InputArea({ onSendMessage, disabled = false }: InputArea
           <button
             onClick={() => fileInputRef.current?.click()}
             className={styles.toolBtn}
-            title="上传文件（PDF/TXT）"
+            title="上傳文件（PDF/TXT/MD）"
             disabled={disabled}
           >
             <UploadOutlined />
@@ -117,7 +118,7 @@ export default function InputArea({ onSendMessage, disabled = false }: InputArea
           <button
             onClick={() => setShowUrlInput(!showUrlInput)}
             className={styles.toolBtn}
-            title="添加网页链接"
+            title="添加網頁連結到知識庫"
             disabled={disabled}
           >
             <LinkOutlined />
@@ -129,7 +130,7 @@ export default function InputArea({ onSendMessage, disabled = false }: InputArea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="输入消息..."
+          placeholder={placeholder}
           className={styles.messageInput}
           disabled={disabled}
           rows={1}

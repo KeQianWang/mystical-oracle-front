@@ -13,3 +13,132 @@ body,
   padding: 0;
   .fontFamily();
 }
+
+/* 神秘预言师主题全局样式 */
+
+// 神秘主题颜色变量
+@primary-color: #4a1f4a;
+@secondary-color: #8b4513;
+@accent-color: #d4af37;
+@dark-bg: #1a1a1a;
+@light-bg: #2d2d2d;
+@text-primary: #f0f0f0;
+@text-secondary: #b0b0b0;
+@mystical-purple: #6b46c1;
+@mystical-gold: #fbbf24;
+
+// 全局样式
+body {
+  background: linear-gradient(135deg, @dark-bg 0%, @light-bg 100%);
+  color: @text-primary;
+  overflow: hidden;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: @dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: @mystical-purple;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: @mystical-gold;
+}
+
+// 神秘符号动画
+@keyframes mystical-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes mystical-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.mystical-symbol {
+  animation: mystical-rotate 20s linear infinite;
+  font-size: 48px;
+  color: @mystical-gold;
+  margin-bottom: 16px;
+}
+
+// 按钮样式
+.mystical-button {
+  background: linear-gradient(45deg, @mystical-purple, @primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(107, 70, 193, 0.3);
+  
+  &:hover {
+    background: linear-gradient(45deg, @primary-color, @mystical-purple);
+    box-shadow: 0 6px 20px rgba(107, 70, 193, 0.5);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// 输入框样式
+.mystical-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid @mystical-purple;
+  border-radius: 8px;
+  color: @text-primary;
+  padding: 12px;
+  font-size: 14px;
+  
+  &::placeholder {
+    color: @text-secondary;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: @mystical-gold;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+  }
+}
+
+// 卡片样式
+.mystical-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(107, 70, 193, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+// 加载动画
+.mystical-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  .loading-dot {
+    width: 8px;
+    height: 8px;
+    background: @mystical-gold;
+    border-radius: 50%;
+    animation: mystical-pulse 1.5s ease-in-out infinite;
+    
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
+  }
+}

@@ -12,6 +12,7 @@
 yarn.lock
 yarn-error.log
 package-lock.json
+CLAUDE.md
 .DS_Store
 
 .vscode

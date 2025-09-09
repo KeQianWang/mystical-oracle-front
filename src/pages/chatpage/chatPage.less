@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: transparent;
   transition: background-color 0.3s;
   position: relative;
 
@@ -17,5 +17,29 @@
     background: transparent;
     overflow: hidden;
     padding: 0 16px;
+  }
+
+  &.mysticalTheme {
+    .serviceStatus {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      justify-content: center;
+      background: rgba(107, 70, 193, 0.1);
+      border-bottom: 1px solid rgba(107, 70, 193, 0.3);
+      
+      .statusBadge {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        
+        &:hover {
+          background: rgba(251, 191, 36, 0.3);
+        }
+      }
+    }
   }
 }
