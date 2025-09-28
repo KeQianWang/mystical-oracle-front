@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Message } from "../../types";
-import { chatAPI } from "../../services";
+import { chatAPI } from "../../services/chat";
 import MessageList from "../../components/MessageList/MessageList";
 import InputArea from "../../components/InputArea/InputArea";
 import styles from "./historyChat.less";
@@ -23,37 +23,39 @@ export default function HistoryChat({ chatId }: HistoryChatProps) {
     // 实际应用中这里应该从后端API获取历史聊天记录
     const loadHistory = async () => {
       setIsLoading(true);
-      
+
       // 模拟API调用延迟
       setTimeout(() => {
         const mockMessages: Message[] = [
           {
-            id: '1',
-            content: '貧道陳玉樓，人稱陳大師。精通陰陽五行，能為您算命、紫微斗數、姓名測算、占卜凶吉。請問您想算什麼？',
-            role: 'assistant',
+            id: "1",
+            content:
+              "貧道陳玉樓，人稱陳大師。精通陰陽五行，能為您算命、紫微斗數、姓名測算、占卜凶吉。請問您想算什麼？",
+            role: "assistant",
             timestamp: new Date(Date.now() - 3600000),
-            mood: 'default'
+            mood: "default",
           },
           {
-            id: '2',
-            content: '陳大師，我想算一下今年的運勢。',
-            role: 'user',
-            timestamp: new Date(Date.now() - 3500000)
+            id: "2",
+            content: "陳大師，我想算一下今年的運勢。",
+            role: "user",
+            timestamp: new Date(Date.now() - 3500000),
           },
           {
-            id: '3',
-            content: '命裡有時終須有，命裡無時莫強求。讓我為您算一下今年的運勢... 根據您的生辰八字，今年您的財運亨通，但要注意身體健康。',
-            role: 'assistant',
+            id: "3",
+            content:
+              "命裡有時終須有，命裡無時莫強求。讓我為您算一下今年的運勢... 根據您的生辰八字，今年您的財運亨通，但要注意身體健康。",
+            role: "assistant",
             timestamp: new Date(Date.now() - 3400000),
-            mood: 'friendly'
-          }
+            mood: "friendly",
+          },
         ];
-        
+
         setMessages(mockMessages);
         setChatInfo({
-          title: '2025年運勢查詢',
+          title: "2025年運勢查詢",
           createdAt: new Date(Date.now() - 3600000),
-          updatedAt: new Date(Date.now() - 3400000)
+          updatedAt: new Date(Date.now() - 3400000),
         });
         setIsLoading(false);
       }, 1000);
@@ -62,50 +64,59 @@ export default function HistoryChat({ chatId }: HistoryChatProps) {
     loadHistory();
   }, [chatId]);
 
-  const handleSendMessage = async (content: string, attachments?: File[], url?: string) => {
+  const handleSendMessage = async (
+    content: string,
+    attachments?: File[],
+    url?: string,
+  ) => {
     if (!content.trim() && !attachments?.length && !url?.trim()) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: content || `${attachments?.map(f => f.name).join(', ') || ''}${url ? ` URL: ${url}` : ''}`,
-      role: 'user',
-      timestamp: new Date()
+      content:
+        content ||
+        `${attachments?.map((f) => f.name).join(", ") || ""}${url ? ` URL: ${url}` : ""}`,
+      role: "user",
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
     try {
       const response = await chatAPI.sendMessage(content);
-      
+
       const aiMessage: Message = {
         id: response.id,
         content: response.msg,
-        role: 'assistant',
+        role: "assistant",
         timestamp: new Date(),
         mood: response.mood,
         voiceStyle: response.voice_style,
-        audioId: response.id
+        audioId: response.id,
       };
-      
-      setMessages(prev => [...prev, aiMessage]);
-      
+
+      setMessages((prev) => [...prev, aiMessage]);
+
       // 更新聊天信息
-      setChatInfo(prev => prev ? {
-        ...prev,
-        updatedAt: new Date()
-      } : null);
-      
+      setChatInfo((prev) =>
+        prev
+          ? {
+              ...prev,
+              updatedAt: new Date(),
+            }
+          : null,
+      );
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: '抱歉，老夫現在無法為您算卦，請稍後再試。',
-        role: 'assistant',
+        content: "抱歉，老夫現在無法為您算卦，請稍後再試。",
+        role: "assistant",
         timestamp: new Date(),
-        mood: 'depressed'
+        mood: "depressed",
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -113,8 +124,8 @@ export default function HistoryChat({ chatId }: HistoryChatProps) {
 
   const handlePlayAudio = (audioId: string) => {
     const audio = new Audio(chatAPI.getAudioUrl(audioId));
-    audio.play().catch(error => {
-      console.error('Failed to play audio:', error);
+    audio.play().catch((error) => {
+      console.error("Failed to play audio:", error);
     });
   };
 
@@ -135,20 +146,20 @@ export default function HistoryChat({ chatId }: HistoryChatProps) {
         <div className={styles.chatHeader}>
           <h2 className={styles.chatTitle}>{chatInfo.title}</h2>
           <div className={styles.chatMeta}>
-            <span>創建於: {chatInfo.createdAt.toLocaleString('zh-TW')}</span>
-            <span>最後更新: {chatInfo.updatedAt.toLocaleString('zh-TW')}</span>
+            <span>創建於: {chatInfo.createdAt.toLocaleString("zh-TW")}</span>
+            <span>最後更新: {chatInfo.updatedAt.toLocaleString("zh-TW")}</span>
           </div>
         </div>
       )}
-      
+
       <div className={styles.chatContent}>
-        <MessageList 
-          messages={messages} 
+        <MessageList
+          messages={messages}
           onPlayAudio={handlePlayAudio}
           isLoading={isLoading}
         />
-        
-        <InputArea 
+
+        <InputArea
           onSendMessage={handleSendMessage}
           disabled={isLoading}
           placeholder="繼續對話..."

@@ -194,12 +194,41 @@
       .userInfo {
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: space-between;
         color: #b0b0b0;
         font-size: 14px;
 
-        .anticon {
-          color: #fbbf24;
+        .user-left {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .anticon {
+            color: #fbbf24;
+          }
+        }
+
+        .loginBtn {
+          color: #6b46c1;
+          font-size: 12px;
+          padding: 0;
+          height: auto;
+
+          &:hover {
+            color: #fbbf24;
+          }
+        }
+
+        .logoutBtn {
+          color: #b0b0b0;
+          font-size: 12px;
+          padding: 2px 8px;
+          height: auto;
+
+          &:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+          }
         }
       }
     }

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import styles from "./baseLayout.less";
 import { Outlet, useNavigate, useLocation } from "umi";
-import { 
-  HomeOutlined, 
-  HistoryOutlined, 
+import {
+  HomeOutlined,
+  HistoryOutlined,
   UserOutlined,
   ThunderboltOutlined,
   MoonOutlined,
-  HeartOutlined
+  HeartOutlined,
+  LogoutOutlined
 } from "@ant-design/icons";
+import { Button, message } from "antd";
 
 interface ChatSession {
   id: string;
@@ -20,6 +22,12 @@ interface ChatSession {
 export default function BaseLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // 检查用户登录状态
+  const token = localStorage.getItem("token");
+  const userStr = localStorage.getItem("user");
+  const user = userStr ? JSON.parse(userStr) : null;
+  const isLoggedIn = !!token && !!user;
   const [sessions, setSessions] = useState<ChatSession[]>([
     {
       id: '1',
@@ -48,12 +56,19 @@ export default function BaseLayout() {
   ];
 
   const handleQuickAction = (action: string) => {
+    // 如果用户未登录，跳转到登录页面
+    if (!isLoggedIn) {
+      message.warning("请先登录后再使用功能");
+      navigate("/login");
+      return;
+    }
+
     const prompts = {
       bazi: '我想做八字排盤，請問需要提供什麼信息？',
       dream: '我做了個夢，能幫我解釋一下嗎？',
       divination: '請為我搖一卦，看看最近的運勢如何？'
     };
-    
+
     if (location.pathname === '/chat') {
       // 如果在新聊天页面，直接填充输入框
       const inputElement = document.querySelector('textarea') as HTMLTextAreaElement;
@@ -65,6 +80,13 @@ export default function BaseLayout() {
       // 否则跳转到新聊天页面
       navigate('/chat');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    message.success("已成功退出登录");
+    navigate("/login");
   };
 
   return (
@@ -98,20 +120,34 @@ export default function BaseLayout() {
         <div className={styles.chatHistory}>
           <div className={styles.historyHeader}>
             <h3>對話歷史</h3>
-            <button 
+            <button
               className={styles.newChatBtn}
-              onClick={() => navigate('/chat')}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  message.warning("请先登录后再创建新对话");
+                  navigate("/login");
+                  return;
+                }
+                navigate('/chat');
+              }}
             >
               <HomeOutlined /> 新對話
             </button>
           </div>
-          
+
           <div className={styles.sessionList}>
             {sessions.map((session) => (
               <div
                 key={session.id}
                 className={styles.sessionItem}
-                onClick={() => navigate(`/chat/${session.id}`)}
+                onClick={() => {
+                  if (!isLoggedIn) {
+                    message.warning("请先登录后再查看历史对话");
+                    navigate("/login");
+                    return;
+                  }
+                  navigate(`/chat/${session.id}`);
+                }}
               >
                 <div className={styles.sessionHeader}>
                   <h4 className={styles.sessionTitle}>{session.title}</h4>
@@ -126,7 +162,31 @@ export default function BaseLayout() {
         <div className={styles.sidebarFooter}>
           <div className={styles.userInfo}>
             <UserOutlined />
-            <span>訪客用戶</span>
+            {isLoggedIn ? (
+              <>
+                <span>{user.username || '已登录用户'}</span>
+                <Button
+                  type="text"
+                  icon={<LogoutOutlined />}
+                  onClick={handleLogout}
+                  className={styles.logoutBtn}
+                  title="退出登录"
+                >
+                  退出
+                </Button>
+              </>
+            ) : (
+              <>
+                <span>訪客用戶</span>
+                <Button
+                  type="link"
+                  onClick={() => navigate("/login")}
+                  className={styles.loginBtn}
+                >
+                  登录
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

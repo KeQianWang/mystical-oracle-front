@@ -1,0 +1,120 @@
+.loginContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.loginBox {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.loginHeader {
+  margin-bottom: 30px;
+  color: white;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mysticalIcon {
+  font-size: 32px;
+}
+
+.logo h1 {
+  margin: 0;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.loginCard {
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: none;
+  overflow: hidden;
+}
+
+.loginCard :global(.ant-card-body) {
+  padding: 0;
+}
+
+.loginTabs {
+  border: none;
+}
+
+.loginTabs :global(.ant-tabs-nav) {
+  margin-bottom: 0;
+  background: #f8f9fa;
+}
+
+.loginTabs :global(.ant-tabs-tab) {
+  border: none;
+  padding: 16px 24px;
+  font-weight: 500;
+}
+
+.loginTabs :global(.ant-tabs-tab-active) {
+  background: white;
+  color: #667eea;
+}
+
+.loginTabs :global(.ant-tabs-content-holder) {
+  padding: 24px;
+}
+
+.loginTabs :global(.ant-form-item-label) {
+  text-align: left;
+  font-weight: 500;
+}
+
+.submitButton {
+  height: 44px;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.loginFooter {
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 10px;
+  }
+
+  .loginBox {
+    max-width: 100%;
+  }
+
+  .logo h1 {
+    font-size: 20px;
+  }
+
+  .loginCard {
+    border-radius: 8px;
+  }
+
+  .loginTabs :global(.ant-tabs-content-holder) {
+    padding: 16px;
+  }
+}

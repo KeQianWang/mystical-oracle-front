@@ -1,27 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
 import MessageList from "../../components/MessageList/MessageList";
 import InputArea from "../../components/InputArea/InputArea";
-import { chatAPI } from "../../services";
+import { chatAPI } from "../../services/chat";
 import { Message } from "../../types";
 import styles from "./chatPage.less";
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      content: '貧道陳玉樓，人稱陳大師。精通陰陽五行，能為您算命、紫微斗數、姓名測算、占卜凶吉。請問您想算什麼？',
-      role: 'assistant',
+      id: "1",
+      content:
+        "貧道陳玉樓，人稱陳大師。精通陰陽五行，能為您算命、紫微斗數、姓名測算、占卜凶吉。請問您想算什麼？",
+      role: "assistant",
       timestamp: new Date(),
-      mood: 'default',
-      voiceStyle: 'calm'
-    }
+      mood: "default",
+      voiceStyle: "calm",
+    },
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [serviceStatus, setServiceStatus] = useState({
     tts: false,
     chat: true,
     knowledge_base: true,
-    websocket: true
+    websocket: true,
   });
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -32,25 +33,31 @@ export default function ChatPage() {
         const health = await chatAPI.getHealthStatus();
         setServiceStatus(health.features);
       } catch (error) {
-        console.error('Failed to check service status:', error);
+        console.error("Failed to check service status:", error);
       }
     };
-    
+
     checkServiceStatus();
   }, []);
 
-  const handleSendMessage = async (content: string, attachments?: File[], url?: string) => {
+  const handleSendMessage = async (
+    content: string,
+    attachments?: File[],
+    url?: string,
+  ) => {
     if (!content.trim() && !attachments?.length && !url?.trim()) return;
 
     // 添加用户消息
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: content || `${attachments?.map(f => f.name).join(', ') || ''}${url ? ` URL: ${url}` : ''}`,
-      role: 'user',
-      timestamp: new Date()
+      content:
+        content ||
+        `${attachments?.map((f) => f.name).join(", ") || ""}${url ? ` URL: ${url}` : ""}`,
+      role: "user",
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
     try {
@@ -59,36 +66,35 @@ export default function ChatPage() {
         try {
           await chatAPI.addUrlToKnowledge(url);
         } catch (error) {
-          console.error('Failed to add URL to knowledge base:', error);
+          console.error("Failed to add URL to knowledge base:", error);
         }
       }
 
       // 发送聊天消息
       const response = await chatAPI.sendMessage(content);
-      
+
       // 添加AI回复
       const aiMessage: Message = {
         id: response.id,
         content: response.msg,
-        role: 'assistant',
+        role: "assistant",
         timestamp: new Date(),
         mood: response.mood,
         voiceStyle: response.voice_style,
-        audioId: response.id
+        audioId: response.id,
       };
-      
-      setMessages(prev => [...prev, aiMessage]);
-      
+
+      setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: '抱歉，老夫現在無法為您算卦，請稍後再試。',
-        role: 'assistant',
+        content: "抱歉，老夫現在無法為您算卦，請稍後再試。",
+        role: "assistant",
         timestamp: new Date(),
-        mood: 'depressed'
+        mood: "depressed",
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -97,8 +103,8 @@ export default function ChatPage() {
   const handlePlayAudio = (audioId: string) => {
     if (audioRef.current) {
       audioRef.current.src = chatAPI.getAudioUrl(audioId);
-      audioRef.current.play().catch(error => {
-        console.error('Failed to play audio:', error);
+      audioRef.current.play().catch((error) => {
+        console.error("Failed to play audio:", error);
       });
     }
   };
@@ -117,22 +123,22 @@ export default function ChatPage() {
             <span className={styles.statusBadge}>⚡ 實時</span>
           )}
         </div>
-        
-        <MessageList 
-          messages={messages} 
+
+        <MessageList
+          messages={messages}
           onPlayAudio={serviceStatus.tts ? handlePlayAudio : undefined}
           isLoading={isLoading}
         />
-        
-        <InputArea 
+
+        <InputArea
           onSendMessage={handleSendMessage}
           disabled={isLoading}
           placeholder="請輸入您的問題..."
         />
       </div>
-      
+
       {/* 隐藏的音频播放器 */}
-      <audio ref={audioRef} style={{ display: 'none' }} />
+      <audio ref={audioRef} style={{ display: "none" }} />
     </div>
   );
 }

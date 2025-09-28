@@ -4,6 +4,12 @@ export const routes = [
     redirect: "/chat",
   },
   {
+    name: "登录页面",
+    path: "/login",
+    component: "@/pages/login/login",
+    layout: false, // 登录页面不使用布局
+  },
+  {
     path: "/",
     name: "布局展示",
     component: "@/layouts/baseLayout",
