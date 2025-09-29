@@ -31,7 +31,9 @@ export default function ChatPage() {
     const checkServiceStatus = async () => {
       try {
         const health = await chatAPI.getHealthStatus();
-        setServiceStatus(health.features);
+        if (health.success) {
+          setServiceStatus(health.data.features);
+        }
       } catch (error) {
         console.error("Failed to check service status:", error);
       }
@@ -73,18 +75,22 @@ export default function ChatPage() {
       // 发送聊天消息
       const response = await chatAPI.sendMessage(content);
 
-      // 添加AI回复
-      const aiMessage: Message = {
-        id: response.id,
-        content: response.msg,
-        role: "assistant",
-        timestamp: new Date(),
-        mood: response.mood,
-        voiceStyle: response.voice_style,
-        audioId: response.id,
-      };
+      if (response.success && response.data) {
+        // 添加AI回复
+        const aiMessage: Message = {
+          id: response.data.id,
+          content: response.data.msg,
+          role: "assistant",
+          timestamp: new Date(),
+          mood: response.data.mood,
+          voiceStyle: response.data.voice_style,
+          audioId: response.data.id,
+        };
 
-      setMessages((prev) => [...prev, aiMessage]);
+        setMessages((prev) => [...prev, aiMessage]);
+      } else {
+        throw new Error(response.error?.message || "发送消息失败");
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
       const errorMessage: Message = {

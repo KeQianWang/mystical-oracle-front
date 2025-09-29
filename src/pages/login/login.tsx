@@ -3,6 +3,7 @@ import { Form, Input, Button, Card, Tabs, message } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { authAPI } from "@/services/auth";
 import styles from "./login.less";
+import { useNavigate } from "umi";
 
 interface LoginForm {
   username: string;
@@ -17,6 +18,7 @@ interface RegisterForm {
 }
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
 
@@ -25,21 +27,14 @@ export default function LoginPage() {
     try {
       const response = await authAPI.login(values);
 
-      if (response && response.access_token) {
-        localStorage.setItem("token", response.access_token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify(response.user || { username: values.username }),
-        );
-
-        message.success("登录成功！");
-
-        // 跳转到聊天页面
-        setTimeout(() => {
-          window.location.href = "/chat";
-        }, 1000);
+      if (response.success && response.data) {
+        navigate("/chat");
       } else {
-        message.error("登录失败，请检查用户名和密码");
+        message.error(
+          response.error?.message
+            ? "登录失败，请检查用户名和密码"
+            : response.error?.message,
+        );
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -53,19 +48,15 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const { confirmPassword, ...registerData } = values;
-
       const response = await authAPI.register(registerData);
-
-      if (response && response.username) {
+      if (response.success) {
         message.success("注册成功！请登录");
-
         // 切换到登录标签
         setActiveTab("login");
       } else {
-        message.error(response.message || "注册失败");
+        message.error(response.error?.message || "注册失败");
       }
     } catch (error) {
-      console.error("Register error:", error);
       message.error("注册失败，请稍后重试");
     } finally {
       setLoading(false);
@@ -77,10 +68,9 @@ export default function LoginPage() {
       <div className={styles.loginBox}>
         <div className={styles.loginHeader}>
           <div className={styles.logo}>
-            <span className={styles.mysticalIcon}>🔮</span>
+            <span className={styles.mysticalIcon}>🧙‍♂️</span>
             <h1>神秘预言师</h1>
           </div>
-          <p className={styles.subtitle}>陈大师在线算命</p>
         </div>
 
         <Card className={styles.loginCard}>
@@ -231,10 +221,6 @@ export default function LoginPage() {
             ]}
           />
         </Card>
-
-        <div className={styles.loginFooter}>
-          <p>© 2025 神秘预言师 - 专业在线算命服务</p>
-        </div>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import {
   ThunderboltOutlined,
   MoonOutlined,
   HeartOutlined,
-  LogoutOutlined
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Button, message } from "antd";
 
@@ -30,29 +30,29 @@ export default function BaseLayout() {
   const isLoggedIn = !!token && !!user;
   const [sessions, setSessions] = useState<ChatSession[]>([
     {
-      id: '1',
-      title: '2025年運勢查詢',
-      date: '2025-01-09',
-      preview: '根據您的生辰八字，今年您的財運亨通...'
+      id: "1",
+      title: "2025年運勢查詢",
+      date: "2025-01-09",
+      preview: "根據您的生辰八字，今年您的財運亨通...",
     },
     {
-      id: '2',
-      title: '解夢：夢見蛇',
-      date: '2025-01-08',
-      preview: '夢見蛇通常預示著好運即將來臨...'
+      id: "2",
+      title: "解夢：夢見蛇",
+      date: "2025-01-08",
+      preview: "夢見蛇通常預示著好運即將來臨...",
     },
     {
-      id: '3',
-      title: '八字排盤',
-      date: '2025-01-07',
-      preview: '您的八字顯示，五行缺金，建議...'
-    }
+      id: "3",
+      title: "八字排盤",
+      date: "2025-01-07",
+      preview: "您的八字顯示，五行缺金，建議...",
+    },
   ]);
 
   const quickActions = [
-    { icon: <ThunderboltOutlined />, label: '八字算命', action: 'bazi' },
-    { icon: <MoonOutlined />, label: '解夢', action: 'dream' },
-    { icon: <HeartOutlined />, label: '搖卦占卜', action: 'divination' }
+    { icon: <ThunderboltOutlined />, label: "八字算命", action: "bazi" },
+    { icon: <MoonOutlined />, label: "解梦", action: "dream" },
+    { icon: <HeartOutlined />, label: "搖卦占卜", action: "divination" },
   ];
 
   const handleQuickAction = (action: string) => {
@@ -64,21 +64,23 @@ export default function BaseLayout() {
     }
 
     const prompts = {
-      bazi: '我想做八字排盤，請問需要提供什麼信息？',
-      dream: '我做了個夢，能幫我解釋一下嗎？',
-      divination: '請為我搖一卦，看看最近的運勢如何？'
+      bazi: "我想做八字排盤，請問需要提供什麼信息？",
+      dream: "我做了個夢，能幫我解釋一下嗎？",
+      divination: "請為我搖一卦，看看最近的運勢如何？",
     };
 
-    if (location.pathname === '/chat') {
+    if (location.pathname === "/chat") {
       // 如果在新聊天页面，直接填充输入框
-      const inputElement = document.querySelector('textarea') as HTMLTextAreaElement;
+      const inputElement = document.querySelector(
+        "textarea",
+      ) as HTMLTextAreaElement;
       if (inputElement) {
         inputElement.value = prompts[action as keyof typeof prompts];
         inputElement.focus();
       }
     } else {
       // 否则跳转到新聊天页面
-      navigate('/chat');
+      navigate("/chat");
     }
   };
 
@@ -128,7 +130,7 @@ export default function BaseLayout() {
                   navigate("/login");
                   return;
                 }
-                navigate('/chat');
+                navigate("/chat");
               }}
             >
               <HomeOutlined /> 新對話
@@ -164,7 +166,7 @@ export default function BaseLayout() {
             <UserOutlined />
             {isLoggedIn ? (
               <>
-                <span>{user.username || '已登录用户'}</span>
+                <span>{user.username || "已登录用户"}</span>
                 <Button
                   type="text"
                   icon={<LogoutOutlined />}
